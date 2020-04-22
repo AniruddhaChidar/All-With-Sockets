@@ -14,3 +14,6 @@ This Project consists of three subparts:
 3. A tool which send images over network
 
 For efficiency, both the chat messages and images will be compressed before sending.
+
+
+To run the game run server.py and then run two instances of game.py.
