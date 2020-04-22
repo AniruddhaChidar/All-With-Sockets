@@ -17,3 +17,7 @@ For efficiency, both the chat messages and images will be compressed before send
 
 
 To run the game run server.py and then run two instances of game.py.
+
+To run the chat plateform run chat_server.py and then chat_client.py.
+
+To run the file sender run image_server.py and then image_client.py.
