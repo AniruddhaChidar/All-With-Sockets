@@ -202,27 +202,29 @@ class Board:
                 if self.board[i][j] != 0:
                     self.board[i][j].selected = False
 
-    def check_mate(self, color):
-        '''if self.is_checked(color):
-            king = None
-            for i in range(self.rows):
-                for j in range(self.cols):
-                    if self.board[i][j] != 0:
-                        if self.board[i][j].king and self.board[i][j].color == color:
-                            king = self.board[i][j]
-            if king is not None:
-                valid_moves = king.valid_moves(self.board)
+    ####### Checkmate function is not defined #################
 
-                danger_moves = self.get_danger_moves(color)
+    # def check_mate(self, color):
+    #     '''if self.is_checked(color):
+    #         king = None
+    #         for i in range(self.rows):
+    #             for j in range(self.cols):
+    #                 if self.board[i][j] != 0:
+    #                     if self.board[i][j].king and self.board[i][j].color == color:
+    #                         king = self.board[i][j]
+    #         if king is not None:
+    #             valid_moves = king.valid_moves(self.board)
 
-                danger_count = 0
+    #             danger_moves = self.get_danger_moves(color)
 
-                for move in valid_moves:
-                    if move in danger_moves:
-                        danger_count += 1
-                return danger_count == len(valid_moves)'''
+    #             danger_count = 0
 
-        return False
+    #             for move in valid_moves:
+    #                 if move in danger_moves:
+    #                     danger_count += 1
+    #             return danger_count == len(valid_moves)'''
+
+    #     return False
 
     def move(self, start, end, color):
         checkedBefore = self.is_checked(color)
