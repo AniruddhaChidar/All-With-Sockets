@@ -2,6 +2,7 @@
 """Server for multithreaded (asynchronous) chat application."""
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
+from crpyto import *
 
 
 def accept_incoming_connections():
@@ -9,7 +10,8 @@ def accept_incoming_connections():
     while True:
         client, client_address = SERVER.accept()
         print("%s:%s has connected." % client_address)
-        client.send(bytes("Greetings from the cave! Now type your name and press enter!", "utf8"))
+        s="Greetings from the cave! Now type your name and press enter!"
+        client.send(enc.encrypt(s.encode('utf-8'),key))
         addresses[client] = client_address
         Thread(target=handle_client, args=(client,)).start()
 
@@ -17,11 +19,12 @@ def accept_incoming_connections():
 def handle_client(client):  # Takes client socket as argument.
     """Handles a single client connection."""
 
-    name = client.recv(BUFSIZ).decode("utf8")
+    name = client.recv(BUFSIZ)
+    name = enc.decrypt(name,key).decode("utf8")
     welcome = 'Welcome %s! If you ever want to quit, type {quit} to exit.' % name
-    client.send(bytes(welcome, "utf8"))
+    client.send(enc.encrypt(welcome.encode('utf-8'),key))
     msg = "%s has joined the chat!" % name
-    broadcast(bytes(msg, "utf8"))
+    broadcast(enc.encrypt(msg.encode('utf-8'),key))
     clients[client] = name
 
     while True:
@@ -29,18 +32,19 @@ def handle_client(client):  # Takes client socket as argument.
         if msg != bytes("{quit}", "utf8"):
             broadcast(msg, name+": ")
         else:
-            client.send(bytes("{quit}", "utf8"))
+            client.send(enc.encrypt("{quit}".encode('utf-8'),key))
             client.close()
             del clients[client]
-            broadcast(bytes("%s has left the chat." % name, "utf8"))
+            s="%s has left the chat." % name
+            broadcast(enc.encrypt(s.encode('utf-8'),key))
             break
 
 
 def broadcast(msg, prefix=""):  # prefix is for name identification.
     """Broadcasts a message to all the clients."""
-
+    # print(msg+" msg")
     for sock in clients:
-        sock.send(bytes(prefix, "utf8")+msg)
+        sock.send(msg)
 
         
 clients = {}

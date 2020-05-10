@@ -3,14 +3,19 @@
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 import tkinter
+from crpyto import *
 
+
+c=0
+name=""
 
 def receive():
+    global c
     """Handles receiving of messages."""
     while True:
         try:
-            msg = client_socket.recv(BUFSIZ).decode("utf8")
-            #msg=msg+" rec"
+            msg = client_socket.recv(BUFSIZ)
+            msg=enc.decrypt(msg,key).decode('utf-8')
             msg_list.insert(tkinter.END, msg)
         except OSError:  # Possibly client has left the chat.
             break
@@ -18,11 +23,20 @@ def receive():
 
 def send(event=None):  # event is passed by binders.
     """Handles sending of messages."""
+    global c,name
     msg = my_msg.get()
-    #msg = msg+" sen"
+    temp=msg
+    if c==0:
+        name=msg
+        c=1
+        print(name)
+    else:
+        msg=name+": "+msg
+    
+    msg = enc.encrypt(msg.encode('utf-8'),key)
     my_msg.set("")  # Clears input field.
-    client_socket.send(bytes(msg, "utf8"))
-    if msg == "{quit}":
+    client_socket.send(msg)
+    if temp == "{quit}":
         client_socket.close()
         top.quit()
 
